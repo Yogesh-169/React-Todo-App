@@ -1,47 +1,46 @@
-import { useState } from "react";
+import { useRef, useContext } from "react";
+import { MdAddCircleOutline } from "react-icons/md";
+import { TodoItemsContext } from "../store/todo-items-store";
 
-function AddTodo({ handleNewItems }) {
-  const [AddTodo, setTodoName] = useState("");
-  const [AddDate, setTodoDate] = useState("");
+function AddTodo() {
+  // const [AddTodo, setTodoName] = useState("");
+  // const [AddDate, setTodoDate] = useState("");
+  const { addNewItem } = useContext(TodoItemsContext);
+  const todoNameElement = useRef();
+  const dueDateElement = useRef();
 
-  const handleTodoName = (e) => {
-    setTodoName(e.target.value);
-  };
-
-  const handleTodoDate = (e) => {
-    setTodoDate(e.target.value);
-  };
-
-  const handleAddButtonClicked = () => {
-    handleNewItems(AddTodo, AddDate);
-    setTodoDate("");
-    setTodoName("");
+  const handleAddButtonClicked = (event) => {
+    event.preventDefault();
+    const todoName = todoNameElement.current.value;
+    const dueDate = dueDateElement.current.value;
+    todoNameElement.current.value = "";
+    dueDateElement.current.value = "";
+    addNewItem(todoName, dueDate);
   };
 
   return (
     <div className="container text-center">
-      <div className="row kg-row">
+      <form className="row kg-row" onSubmit={handleAddButtonClicked}>
         <div className="col-6">
           <input
             type="text"
             placeholder="Enter Todo Here"
-            value={AddTodo}
-            onChange={handleTodoName}
+            ref={todoNameElement}
           />
         </div>
         <div className="col-4">
-          <input type="date" value={AddDate} onChange={handleTodoDate} />
+          <input type="date" ref={dueDateElement} />
         </div>
         <div className="col-2">
           <button
-            type="button"
+            // type="button"
             className="btn btn-success kg-button"
-            onClick={handleAddButtonClicked}
+            // onClick={handleAddButtonClicked}
           >
-            Add
+            <MdAddCircleOutline />
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
